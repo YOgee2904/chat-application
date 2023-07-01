@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="module" src="contents/user.js"></script>
+    <script type="module" src="contents/utility.js"></script>
+    <link rel="stylesheet" href="contents/style.css" />
+  </head>
+  <body>
+    <header>
+      <div id="profile-bar">
+        <h2>We Chat..</h2>
+        <h3>what the heck</h3>
+      </div>
+      <div id="chat-bar"></div>
+      <div id="message-box"></div>
+    </header>
+
+    <div id="main-container">
+      <div class="user-container">
+        <div id="users-list"></div>
+      </div>
+      <div class="container">
+        <div class="chat-container"></div>
+        <div class="input-container">
+          <div id="file-container">
+            <input id="file" type="file" multiple />
+            <label for="file" id="file-button">
+              <svg
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 512 512"
+                xml:space="preserve"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <g>
+                    <g>
+                      <path
+                        d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M283.429,242.957v159.329 h-54.857V242.957H122.704l133.307-133.242l133.275,133.242H283.429z"
+                      ></path>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </label>
+          </div>
+          <textarea name="textBox" id="message"></textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
