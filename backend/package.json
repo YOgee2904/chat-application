@@ -23,7 +23,6 @@
   "version": "1.0.0",
   "main": "./server/server.js",
   "scripts": {
-    "postinstall": "node aliases.js",
     "dev": "nodemon server.js",
     "serve": "tsc -w & npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -6,13 +6,14 @@ const { v4: uuidv4 } = require("uuid");
 const { readFileSync } = require("fs");
 const MongoDBStore = require('connect-mongodb-session')(session);
 const  auth = require('./authenticate');
+const path = require("path");
 //Creating Express Application
 const app = express();
 
 //creating http server on a express application
 const httpServer = createServer(app);
-
-app.use("/contents", express.static(__dirname + "/dist"));
+// chat-application/dist
+app.use("/contents", express.static(path.join(__dirname, "../dist")));
 
 app.use(express.json());
 
@@ -55,7 +56,7 @@ app.post("/auth", (req, res) => {
   res.redirect("/");
 });
 app.get("/login", (req, res) => {
-  res.sendFile(__dirname + "/login.html");
+  res.sendFile(path.join(__dirname, "../login.html"));
 });
 app.use(auth.jwtMiddleware);
 //creating socket server on http server
@@ -71,7 +72,7 @@ io.use(wrap(sessionMiddleware));
 
 app.get("/", (req, res) => {
   if (req.session.authenticated) {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(path.join(__dirname, "../index.html"));
   } else {
     res.redirect("/login");
   }
@@ -138,7 +139,7 @@ io.on("connection", (socket) => {
 });
 
 
-  httpServer.listen(3000, () => {
+  httpServer.listen(3000, "0.0.0.0",() => {
     console.log("server started");
   });
 
