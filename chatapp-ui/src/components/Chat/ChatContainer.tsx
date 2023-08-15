@@ -8,6 +8,7 @@ import { ArrowBack, ArrowDownward } from "@mui/icons-material";
 function ChatContainer() {
   const scrollDown = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const maxScrollTop = React.useRef<number>(0);
   const { socket } = React.useContext(SocketContext);
   const { state, dispatch } = useMessage();
   React.useEffect(() => {
@@ -15,6 +16,29 @@ function ChatContainer() {
       scrollDown.current.addEventListener("click", () => {
         if (containerRef.current) {
           containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+      });
+    }
+    if (containerRef.current) {
+      containerRef.current.addEventListener("scroll", () => {
+        if(containerRef.current && maxScrollTop.current < containerRef.current.scrollTop){
+          maxScrollTop.current = containerRef.current.scrollTop;
+        }
+        if (
+          containerRef.current &&
+          containerRef.current.scrollTop < maxScrollTop.current
+        ) {
+          console.log("scrolling" + containerRef.current.scrollTop + "px");
+          console.log(
+            "scroll Height" + containerRef.current.scrollHeight + "px"
+          );
+          if (scrollDown.current) {
+            scrollDown.current.style.display = "flex";
+          }
+        } else {
+          if (scrollDown.current) {
+            scrollDown.current.style.display = "none";
+          }
         }
       });
     }
@@ -33,8 +57,10 @@ function ChatContainer() {
   React.useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      maxScrollTop.current = containerRef.current.scrollTop;
     }
   }, [state.messages]);
+
   function handleMessage(message: string, ref: any) {
     if (message.trim() === "") return;
     ref.current.value = "";
@@ -49,7 +75,7 @@ function ChatContainer() {
   return (
     <>
       <div
-        className="flex-1  overflow-y-scroll flex flex-col p-3 bg-[#252525]"
+        className="flex-1  overflow-y-scroll flex flex-col p-3 dark:bg-[#252525] bg-light-background-tertiary"
         ref={containerRef}
       >
         {state.messages.map((message, index) => (
@@ -61,7 +87,7 @@ function ChatContainer() {
         ))}
         <div
           ref={scrollDown}
-          className="flex justify-center items-center absolute bottom-[85px] right-4 rounded-full bg-[#252525] w-10 h-10 text-[#ccc] cursor-pointer"
+          className="hidden justify-center items-center absolute bottom-[85px] right-4 rounded-full bg-zinc-950 w-10 h-10 text-[#ccc] cursor-pointer"
         >
           <ArrowDownward />
         </div>

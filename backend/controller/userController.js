@@ -18,11 +18,16 @@ function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
+//validate password
+function validatePassword(password) {
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    return re.test(String(password));
+}
 //create user
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { name, email, password } = req.body;
-        if (!validateEmail(email))
+        if (!validateEmail(email) || !validatePassword(password))
             return res.status(400).json({ message: "Invalid Email" });
         try {
             const user = yield model_1.userCollection.findOne({ email: email });
@@ -31,7 +36,7 @@ function createUser(req, res) {
             }
             const salt = (0, generateHash_1.createSalt)();
             const hash = (0, generateHash_1.createHash)(password, salt);
-            const newuser = yield model_1.userCollection.insertOne({
+            yield model_1.userCollection.insertOne({
                 name,
                 email,
                 hash,
@@ -62,7 +67,7 @@ function loginUser(req, res) {
                 hash: user.hash,
             });
             if (!isVerified)
-                return res.status(401).json({ "error": "You are not Authenticated" });
+                return res.status(401).json({ error: "You are not Authenticated" });
             const token = (0, authenticate_1.generateToken)({ name: user.name, email });
             const refreshToken = (0, authenticate_1.generateRefreshToken)({ email });
             res.status(201).json({ token: token, refreshToken: refreshToken });

@@ -1,23 +1,30 @@
-import  { Request, Response } from "express";
+import { Request, Response } from "express";
 import { userCollection as users } from "../model/model";
 import {
   createHash,
   createSalt,
   verifyHash,
 } from "../authentication/generateHash";
-import { generateRefreshToken, generateToken } from "../authentication/authenticate";
+import {
+  generateRefreshToken,
+  generateToken,
+} from "../authentication/authenticate";
 // validate Email
 function validateEmail(email: string) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
-
+//validate password
+function validatePassword(password: string) {
+  const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+  return re.test(String(password));
+}
 //create user
 
 export async function createUser(req: Request, res: Response) {
   const { name, email, password } = req.body;
-  if (!validateEmail(email))
+  if (!validateEmail(email) || !validatePassword(password))
     return res.status(400).json({ message: "Invalid Email" });
   try {
     const user = await users.findOne({ email: email });
@@ -26,14 +33,14 @@ export async function createUser(req: Request, res: Response) {
     }
     const salt = createSalt();
     const hash = createHash(password, salt);
-    const newuser = await users.insertOne({
+    await users.insertOne({
       name,
       email,
       hash,
       salt,
     });
     const token = generateToken({ name, email });
-    const refreshToken = generateRefreshToken({email})
+    const refreshToken = generateRefreshToken({ email });
     res.status(201).json({ token: token, refreshToken: refreshToken });
   } catch (error) {
     res.status(500).json({ message: error });
@@ -54,10 +61,11 @@ export async function loginUser(req: Request, res: Response) {
       salt: user.salt,
       hash: user.hash,
     });
-    if(!isVerified) return res.status(401).json({"error" : "You are not Authenticated"})
+    if (!isVerified)
+      return res.status(401).json({ error: "You are not Authenticated" });
     const token = generateToken({ name: user.name, email });
-    const refreshToken = generateRefreshToken({email})
-    res.status(201).json({ token: token, refreshToken: refreshToken});
+    const refreshToken = generateRefreshToken({ email });
+    res.status(201).json({ token: token, refreshToken: refreshToken });
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -77,4 +85,3 @@ export async function verifyUser(req: Request, res: Response) {
     res.status(500).json({ message: error });
   }
 }
-

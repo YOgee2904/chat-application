@@ -6,6 +6,10 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --background-primary: #BEADFA;
+  --background-secondary: #D0BFFF;
+  --background-tertiary: #DFCCFB;
+  --background-quaternary: #FFF3DA;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,6 +17,10 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --background-primary: #BEADFA;
+    --background-secondary: #0006;
+    --background-tertiary: #DFCCFB;
+    --background-quaternary: #FFF3DA;
   }
 }
 
@@ -60,7 +68,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(24, 24, 27);
   bottom: 0;
   width: 100%;
   display: flex;
@@ -110,7 +117,7 @@ body {
 user-box active
 */
 .user-box.active {
-  background-color: #0006;
+  background-color: var(--background-secondary);
 }
 
 @keyframes customFadeIn {

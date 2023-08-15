@@ -21,12 +21,14 @@ function UserBox({
     handleWhoIsChild(inputRef.current);
     dispatch({
       type: "SELECT_USER",
-      payload: { username: username, socketId: null, imageUrl: imageUrl},
+      payload: { username: username, socketId: null, imageUrl: imageUrl },
     });
   }
   return (
     <Card
-      className={`user-box ${isSelected && "active"}`}
+      className={`user-box ${
+        isSelected && "active"
+      } hover:bg-light-background-tertiary dark:hover:bg-[#0006] dark:text-[#ccc]`}
       onClick={(e) => handleClick(e)}
       sx={{
         display: "flex",
@@ -35,13 +37,10 @@ function UserBox({
         height: 82,
         borderRadius: 0,
         backgroundColor: "#0002",
-        border: 0.1,
+        borderBlock: 0.1,
         borderBlockColor: "#0001",
         cursor: "pointer",
         flexShrink: "0",
-        "&:hover": {
-          backgroundColor: "#0004 ",
-        },
       }}
     >
       <Avatar src={`${imageUrl}`} sx={{ marginLeft: 1 }} />
@@ -50,7 +49,6 @@ function UserBox({
         <Typography
           ref={inputRef}
           sx={{
-            color: "#ccc",
             fontSize: "1.1rem",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -62,7 +60,6 @@ function UserBox({
         <Typography
           variant="body2"
           sx={{
-            color: "#ccc",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
@@ -72,11 +69,14 @@ function UserBox({
         </Typography>
       </CardContent>
 
-      <div className="flex flex-col items-end justify-center m-2 gap-1">
-        <div className="flex items-center justify-center w-5 h-5 bg-blue-300 rounded-full text-xs">
+      <div className="flex flex-col items-end justify-center m-2 gap-1 h-full">
+       { !isSelected &&  <div className={` flex items-center justify-center w-5 h-5 bg-gray-100 rounded-full text-xs text-black`}>
           50
-        </div>
-        <Typography variant="body2" sx={{ color: "#ccc", fontWeight: "light" }}>
+        </div>}
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: "light", alignSelf: "flex-end" }}
+        >
           12:40 pm
         </Typography>
       </div>

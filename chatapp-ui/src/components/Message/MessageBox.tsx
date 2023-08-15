@@ -30,7 +30,7 @@ function MessageBox({ isUser, message }: { isUser: boolean; message: string }) {
       <div ref={messageRef} className="whitespace-pre-wrap relative">
         {message}
         <span
-          className="absolute text-white bottom-0 right-0 bg-blend-lighten hover:underline cursor-pointer text-sm w-full text-end "
+          className="absolute text-[#ccc] bottom-0 right-0 bg-zinc-900 hover:underline cursor-pointer text-xs w-full text-end "
           ref={showMore}
         >
           show more

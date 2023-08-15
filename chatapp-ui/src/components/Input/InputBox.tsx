@@ -40,7 +40,7 @@ function InputBox({
   }
 
   return (
-    <div className="input-container">
+    <div className="flex justify-center items-center bottom-0 w-full dark:bg-zinc-900 p-2">
       <div id="file-container">
         <input id="file" type="file" multiple />
         <label htmlFor="file" id="file-button">
@@ -69,9 +69,10 @@ function InputBox({
         </label>
       </div>
       <textarea
+      className="resize-none whitespace-pre-wrap max-h-[100px] w-4/5 p-4 mx-3 my-1 text-base rounded-md outline-none dark:bg-[#252525] dark:text-[#cecece]"
         ref={textareaRef}
         name="textBox"
-        id="message"
+        id=""
         rows={1}
         onChange={adjustTextareaHeight}
         onKeyDown={(e) => {
@@ -81,7 +82,7 @@ function InputBox({
       ></textarea>
       <SendIcon
         onClick={handleSubmit}
-        sx={{ width: 32, height: 32, fill: "#ccc" }}
+        sx={{ width: 32, height: 32, fill: "#ccc"}}
       />
     </div>
   );

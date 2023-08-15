@@ -43,7 +43,7 @@ function UserList({ debouncedValue }: { debouncedValue: string }) {
   return (
     <>
       {filteredUsers ? (
-        <div className="flex-1 flex flex-col max-h-[calc(100vh-122px)] overflow-y-scroll bg-[#252525]">
+        <div className="flex-1 flex flex-col max-h-[calc(100vh-122px)] overflow-y-scroll dark:bg-[#252525] bg-light-background-tertiary border-0 ">
           <div>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user: any, index: number) => (
@@ -58,7 +58,7 @@ function UserList({ debouncedValue }: { debouncedValue: string }) {
                 />
               ))
             ) : (
-              <div className="h-[100px] w-full flex items-center justify-center text-[#ccc] ">
+              <div className="h-[100px] w-full flex items-center justify-center dark:text-[#ccc] ">
                 <span>No user found</span>
               </div>
             )}

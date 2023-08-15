@@ -31,7 +31,7 @@ function UserTop({ handleChange }: { handleChange: Function }) {
 
   return (
     <>
-      <div className="h-[70px] bg-zinc-900 flex items-center justify-between text-[#ccc] font-semibold text-lg p-5">
+      <div className="h-[70px] dark:bg-zinc-900 dark:text-[#ccc] bg-light-background-primary flex items-center justify-between drak:text-[#ccc] font-semibold text-lg p-5">
         <div className="flex items-center gap-2">
           <span>WEB CHAT</span>
         </div>
@@ -58,8 +58,6 @@ function UserTop({ handleChange }: { handleChange: Function }) {
             sx: {
               overflow: "visible",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              backgroundColor: "#252525",
-              color: "#ccc",
               mt: 1.5,
               "& .MuiAvatar-root": {
                 width: 32,
@@ -76,7 +74,6 @@ function UserTop({ handleChange }: { handleChange: Function }) {
                 right: 14,
                 width: 10,
                 height: 10,
-                backgroundColor: "#252525",
                 transform: "translateY(-50%) rotate(45deg)",
                 zIndex: 0,
               },
@@ -91,22 +88,22 @@ function UserTop({ handleChange }: { handleChange: Function }) {
           <Divider />
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
-              <Settings fontSize="small" className="fill-white" />
+              <Settings fontSize="small" />
             </ListItemIcon>
             Settings
           </MenuItem>
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
-              <Logout fontSize="small" className="fill-white" />
+              <Logout fontSize="small"/>
             </ListItemIcon>
             Logout
           </MenuItem>
         </Menu>
       </div>
-      <div className="text-white px-2 py-1 h-[50px] bg-[#252525] flex justify-center relative">
+      <div className="dark:text-white px-2 py-1 h-[50px] dark:bg-[#252525] bg-light-background-tertiary flex justify-center relative">
         <input
           type="search"
-          className="w-full bg-zinc-900 h-full outline-none p-2 rounded-md"
+          className="w-full dark:bg-zinc-900 bg-light-background-quaternary h-full outline-none p-2 rounded-md"
           placeholder="search..."
           onChange={(e) => setSearch(e.target.value)}
         />

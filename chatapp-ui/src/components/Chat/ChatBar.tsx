@@ -6,7 +6,7 @@ import React from "react";
 function ChatBar() {
   const { state, dispatch } = useSelectUser();
   return (
-    <div className="h-[70px] bg-zinc-900 flex items-center text-white p-5 gap-4">
+    <div className="h-[70px] dark:bg-zinc-900 bg-light-background-primary flex items-center dark:text-[#ccc]  p-5 gap-4">
       <Avatar src={state.selectUser.imageUrl} />
       <span className="text-md">{state.selectUser.username}</span>
     </div>
