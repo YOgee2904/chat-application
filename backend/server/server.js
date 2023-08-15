@@ -4,26 +4,43 @@ const { Server } = require("socket.io");
 const session = require("express-session");
 const { v4: uuidv4 } = require("uuid");
 const { readFileSync } = require("fs");
-const MongoDBStore = require('connect-mongodb-session')(session);
-const  auth = require('./authenticate');
+const MongoDBStore = require("connect-mongodb-session")(session);
 const path = require("path");
+const { userCollection } = require("../model/model");
+const { connect } = require("../model/mongoConnect");
+const { router } = require("../router/route");
+const cors = require("cors");
 //Creating Express Application
 const app = express();
 
-//creating http server on a express application
-const httpServer = createServer(app);
+//cors
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "*"],
+    credentials: true,
+    allowedHeaders: "Authorization",
+  })
+);
+
 // chat-application/dist
 app.use("/contents", express.static(path.join(__dirname, "../dist")));
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+app.get("/", (req, res) => {
+  res.json({ message: "Hello World from router express" });
+});
+app.use("/auth", router);
+
+// creating http server on a express application
+const httpServer = createServer(app);
 
 const store = new MongoDBStore({
   uri: "mongodb://localhost:27017/chatapp",
   collection: "session",
-  expires: 1000 * 60 * 60 * 24 * 7,
-})
+  expires: 1000 * 60 * 60 * 24,
+});
 
 // session option
 const sessionMiddleware = session({
@@ -31,10 +48,13 @@ const sessionMiddleware = session({
   genid: function () {
     return uuidv4();
   },
-  secret: readFileSync(__dirname + '/secret/secret.txt', "utf-8").trim(),
+  secret: readFileSync(
+    path.join(__dirname, "../secret/secret.txt"),
+    "utf-8"
+  ).trim(),
   resave: false,
   saveUninitialized: false,
-  store:  store,
+  store: store,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7,
     sameSite: true,
@@ -42,27 +62,42 @@ const sessionMiddleware = session({
   },
 });
 
+// app.post("/api/user", async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     const user = (await userCollection).insertOne({
+//       username,
+//       password,
+//     });
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: error });
+//   }
+// });
 
 // use session middleware
 app.use(sessionMiddleware);
 
-// login route
-app.post("/auth", (req, res) => {
-  const token = auth.generateToken({userIDP:uuidv4(), username: req.body.username})
-  //set cookie
-  res.setHeader("Set-Cookie", `token=${token}; path=/; httpOnly`)
+// // login route
+app.post("/api/auth", (req, res) => {
+//   //set cookie
+//   // res.setHeader("Set-Cookie", `token=${token}; path=/; httpOnly`)
+//   // // Bearer token
+//   // res.setHeader("Authorization", `Bearer ${token}`)
+//   //set session"
   req.session.authenticated = true;
   req.session.username = req.body.username;
-  res.redirect("/");
+  res.redirect("/chat-session");
 });
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../login.html"));
 });
-app.use(auth.jwtMiddleware);
+// app.use(auth.jwtMiddleware);
 //creating socket server on http server
 
 const io = new Server(httpServer, {
   maxHttpBufferSize: 1e8,
+  cors:   { origin: "*" }
 });
 
 const wrap = (middleware) => (socket, next) =>
@@ -70,7 +105,7 @@ const wrap = (middleware) => (socket, next) =>
 
 io.use(wrap(sessionMiddleware));
 
-app.get("/", (req, res) => {
+app.get("/chat-session", (req, res) => {
   if (req.session.authenticated) {
     res.sendFile(path.join(__dirname, "../index.html"));
   } else {
@@ -88,7 +123,8 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  let username = socket.request.session.username;
+  let username = socket.request.session?.username ||  'yogee';
+  // let username = 'xxxx'
   socket.emit("username", username);
   socket.broadcast.emit("user-connected", {
     username: username,
@@ -103,6 +139,7 @@ io.on("connection", (socket) => {
   }
   socket.emit("users", users);
   socket.on("message", (data) => {
+    console.log(data);
     socket.broadcast.emit("message", {
       message: data.message,
       username: username,
@@ -138,8 +175,8 @@ io.on("connection", (socket) => {
   });
 });
 
-
-  httpServer.listen(3000, "0.0.0.0",() => {
+connect().then(() => {
+  httpServer.listen(4000, () => {
     console.log("server started");
   });
-
+});

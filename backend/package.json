@@ -2,8 +2,10 @@
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.2",
     "connect-mongodb-session": "^3.1.1",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.6.0",
     "socket.io": "^4.6.2",
@@ -24,6 +26,7 @@
   "main": "./server/server.js",
   "scripts": {
     "dev": "nodemon server.js",
+    "socket": "tsc -w & nodemon ./server/index.js",
     "serve": "tsc -w & npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
